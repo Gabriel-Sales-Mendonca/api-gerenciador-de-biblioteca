@@ -43,13 +43,9 @@ public class BookService {
 
     public BookCreateResponseDTO create(BookCreateRequestDTO bookCreateRequestDTO) {
         Book bookToSave = new Book(bookCreateRequestDTO);
-
         Book bookCreated = this.bookRepository.save(bookToSave);
 
-        return new BookCreateResponseDTO(
-                bookCreated.getId(),
-                bookCreated.getTitle()
-        );
+        return new BookCreateResponseDTO(bookCreated);
     }
 
 }
