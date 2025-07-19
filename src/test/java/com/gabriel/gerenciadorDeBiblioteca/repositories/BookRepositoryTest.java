@@ -1,6 +1,7 @@
 package com.gabriel.gerenciadorDeBiblioteca.repositories;
 
 import com.gabriel.gerenciadorDeBiblioteca.entities.Book;
+import com.gabriel.gerenciadorDeBiblioteca.util.BookCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class BookRepositoryTest {
     @Test
     @DisplayName("Cria Book")
     void create_PersistBook_WhenSuccessfull() {
-        Book bookToSave = this.createBook();
+        Book bookToSave = BookCreator.createBook();
         Book bookCreated = this.bookRepository.save(bookToSave);
 
         Assertions.assertThat(bookCreated).isNotNull();
@@ -30,7 +31,7 @@ class BookRepositoryTest {
     @Test
     @DisplayName("Atualiza Book")
     void update_UpdateBook_WhenSuccessfull() {
-        Book bookToCreate = this.createBook();
+        Book bookToCreate = BookCreator.createBook();
         Book bookCreated = this.bookRepository.save(bookToCreate);
 
         bookCreated.setTitle("Outro titulo");
@@ -42,7 +43,7 @@ class BookRepositoryTest {
     @Test
     @DisplayName("Busca por ID")
     void find_FindById_WhenSuccessfull() {
-        Book bookToCreate = this.createBook();
+        Book bookToCreate = BookCreator.createBook();
         Book bookCreated = this.bookRepository.save(bookToCreate);
 
         Optional<Book> bookOptional = this.bookRepository.findById(bookCreated.getId());
@@ -54,7 +55,7 @@ class BookRepositoryTest {
     @Test
     @DisplayName("Busca por Title")
     void find_FindByTitle_WhenSuccessfull() {
-        Book bookToCreate = this.createBook();
+        Book bookToCreate = BookCreator.createBook();
         Book bookCreated = this.bookRepository.save(bookToCreate);
 
         List<Book> books = this.bookRepository.findByTitle(bookCreated.getTitle());
@@ -67,7 +68,7 @@ class BookRepositoryTest {
     @Test
     @DisplayName("Deleta Book por ID")
     void delete_DeleteBookById_WhenSuccessfull() {
-        Book bookToCreate = this.createBook();
+        Book bookToCreate = BookCreator.createBook();
         Book bookCreated = this.bookRepository.save(bookToCreate);
 
         this.bookRepository.deleteById(bookCreated.getId());
@@ -75,10 +76,6 @@ class BookRepositoryTest {
         Optional<Book> bookOptional = this.bookRepository.findById(bookCreated.getId());
 
         Assertions.assertThat(bookOptional).isEmpty();
-    }
-
-    private Book createBook() {
-        return new Book("Titulo Exemplo");
     }
 
 }

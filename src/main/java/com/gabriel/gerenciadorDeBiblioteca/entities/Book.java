@@ -1,5 +1,6 @@
 package com.gabriel.gerenciadorDeBiblioteca.entities;
 
+import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateRequestDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -10,7 +11,7 @@ public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     private String title;
 
     @ManyToOne
@@ -24,8 +25,16 @@ public class Book {
         this.title = title;
     }
 
-    public int getId() {
+    public Book(BookCreateRequestDTO bookCreateRequestDTO) {
+        this.title = bookCreateRequestDTO.title();
+    }
+
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
