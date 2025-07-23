@@ -52,4 +52,9 @@ public class BookService {
         return new BookCreateResponseDTO(bookCreated);
     }
 
+    public void deleteById(Long id) {
+        findById(id);
+        this.bookRepository.deleteById(id);
+    }
+
 }
