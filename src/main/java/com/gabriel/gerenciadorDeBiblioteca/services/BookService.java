@@ -5,6 +5,7 @@ import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateResponseDTO;
 import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookResponseDTO;
 import com.gabriel.gerenciadorDeBiblioteca.entities.Book;
 import com.gabriel.gerenciadorDeBiblioteca.repositories.BookRepository;
+import com.gabriel.gerenciadorDeBiblioteca.services.excpetions.BadRequestException;
 import com.gabriel.gerenciadorDeBiblioteca.services.excpetions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,10 @@ public class BookService {
     }
 
     public BookCreateResponseDTO create(BookCreateRequestDTO bookCreateRequestDTO) {
+        if (bookCreateRequestDTO.title().isBlank()) {
+            throw new BadRequestException("Título está em branco");
+        }
+
         Book bookToSave = new Book(bookCreateRequestDTO);
         Book bookCreated = this.bookRepository.save(bookToSave);
 

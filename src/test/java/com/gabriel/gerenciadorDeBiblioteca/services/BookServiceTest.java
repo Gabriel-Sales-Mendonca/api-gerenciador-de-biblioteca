@@ -2,8 +2,10 @@ package com.gabriel.gerenciadorDeBiblioteca.services;
 
 import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateRequestDTO;
 import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateResponseDTO;
+import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookResponseDTO;
 import com.gabriel.gerenciadorDeBiblioteca.entities.Book;
 import com.gabriel.gerenciadorDeBiblioteca.repositories.BookRepository;
+import com.gabriel.gerenciadorDeBiblioteca.services.excpetions.BadRequestException;
 import com.gabriel.gerenciadorDeBiblioteca.util.BookCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,8 +19,6 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Testes para Book Service")
@@ -39,20 +39,34 @@ class BookServiceTest {
     @Test
     @DisplayName("Retorna lista com books")
     void findAll_ReturnListOfBooks_WhenSuccessful() {
-        List<Book> books = this.bookService.findAll();
+        Book bookCreated = BookCreator.createValidBook();
+
+        List<BookResponseDTO> books = this.bookService.findAll();
 
         Assertions.assertThat(books).isNotEmpty();
-        Assertions.assertThat(books.getFirst().getTitle()).isEqualTo("Titulo Exemplo");
+        Assertions.assertThat(books.getFirst().title()).isEqualTo(bookCreated.getTitle());
     }
 
     @Test
     @DisplayName("Cria book")
     void create_CreateBook_WhenSuccessful() {
-        BookCreateRequestDTO bookToSave = BookCreator.createBookRequestDTO();
+        Book book = BookCreator.createValidBook();
+        BookCreateRequestDTO bookToSave = new BookCreateRequestDTO(book.getTitle());
+
         BookCreateResponseDTO bookCreated = this.bookService.create(bookToSave);
 
         Assertions.assertThat(bookCreated).isNotNull();
         Assertions.assertThat(bookCreated.title()).isEqualTo(bookToSave.title());
+    }
+
+    @Test
+    @DisplayName("Teste se lança exceção quando o título está em branco")
+    void create_ThrowException_WhenEmptyTitle() {
+        BookCreateRequestDTO bookCreateRequestDTO = BookCreator.createBookRequestDTOWithEmptyTitle();
+
+        Assertions.assertThatExceptionOfType(BadRequestException.class)
+                .isThrownBy(() -> this.bookService.create(bookCreateRequestDTO))
+                .withMessage("Título está em branco");
     }
 
 }
