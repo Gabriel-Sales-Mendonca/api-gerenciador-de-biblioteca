@@ -6,6 +6,7 @@ import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookResponseDTO;
 import com.gabriel.gerenciadorDeBiblioteca.entities.Book;
 import com.gabriel.gerenciadorDeBiblioteca.repositories.BookRepository;
 import com.gabriel.gerenciadorDeBiblioteca.services.excpetions.BadRequestException;
+import com.gabriel.gerenciadorDeBiblioteca.services.excpetions.ResourceNotFoundException;
 import com.gabriel.gerenciadorDeBiblioteca.util.BookCreator;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +20,7 @@ import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @DisplayName("Testes para Book Service")
@@ -33,6 +35,7 @@ class BookServiceTest {
     void setUp() {
         List<Book> books = List.of(BookCreator.createValidBook());
         BDDMockito.when(bookRepository.findAll()).thenReturn(books);
+        BDDMockito.when(bookRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.of(BookCreator.createValidBook()));
         BDDMockito.when(bookRepository.save(ArgumentMatchers.any())).thenReturn(BookCreator.createValidBook());
     }
 
@@ -45,6 +48,18 @@ class BookServiceTest {
 
         Assertions.assertThat(books).isNotEmpty();
         Assertions.assertThat(books.getFirst().title()).isEqualTo(bookCreated.getTitle());
+    }
+
+    @Test
+    @DisplayName("Lança exceção de livro não encontrado")
+    void findById_ThrowException_WhenBookNotFound() {
+        BDDMockito.when(bookRepository.findById(ArgumentMatchers.any())).thenReturn(Optional.empty());
+
+        long id = 0L;
+
+        Assertions.assertThatExceptionOfType(ResourceNotFoundException.class)
+                .isThrownBy(() -> this.bookService.findById(id))
+                .withMessage("Livro não encontrado, id: " + id);
     }
 
     @Test
