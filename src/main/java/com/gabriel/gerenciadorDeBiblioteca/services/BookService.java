@@ -17,7 +17,7 @@ import java.util.List;
 @Service
 public class BookService {
 
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -41,15 +41,14 @@ public class BookService {
         return new BookResponseDTO(book);
     }
 
-    public BookCreateResponseDTO create(BookCreateRequestDTO bookCreateRequestDTO) {
-        if (bookCreateRequestDTO.title().isBlank()) {
+    public BookResponseDTO create(Book bookToSave) {
+        if (bookToSave.getTitle().isBlank()) {
             throw new BadRequestException("Título está em branco");
         }
 
-        Book bookToSave = new Book(bookCreateRequestDTO);
         Book bookCreated = this.bookRepository.save(bookToSave);
 
-        return new BookCreateResponseDTO(bookCreated);
+        return new BookResponseDTO(bookCreated);
     }
 
     public void deleteById(Long id) {
