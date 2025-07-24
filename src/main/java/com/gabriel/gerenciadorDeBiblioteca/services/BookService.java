@@ -1,8 +1,5 @@
 package com.gabriel.gerenciadorDeBiblioteca.services;
 
-import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateRequestDTO;
-import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateResponseDTO;
-import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookResponseDTO;
 import com.gabriel.gerenciadorDeBiblioteca.entities.Book;
 import com.gabriel.gerenciadorDeBiblioteca.repositories.BookRepository;
 import com.gabriel.gerenciadorDeBiblioteca.services.excpetions.BadRequestException;
@@ -23,32 +20,21 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public List<BookResponseDTO> findAll() {
-        List<Book> books = this.bookRepository.findAll();
-        List<BookResponseDTO> bookResponseDTOList = new ArrayList<>();
-
-        for (Book book : books) {
-            bookResponseDTOList.add(new BookResponseDTO(book));
-        }
-
-        return bookResponseDTOList;
+    public List<Book> findAll() {
+        return this.bookRepository.findAll();
     }
 
-    public BookResponseDTO findById(Long id) {
-        Book book = this.bookRepository.findById(id)
+    public Book findById(Long id) {
+        return this.bookRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Livro não encontrado, id: " + id));
-
-        return new BookResponseDTO(book);
     }
 
-    public BookResponseDTO create(Book bookToSave) {
+    public Book create(Book bookToSave) {
         if (bookToSave.getTitle().isBlank()) {
             throw new BadRequestException("Título está em branco");
         }
 
-        Book bookCreated = this.bookRepository.save(bookToSave);
-
-        return new BookResponseDTO(bookCreated);
+        return this.bookRepository.save(bookToSave);
     }
 
     public void deleteById(Long id) {
