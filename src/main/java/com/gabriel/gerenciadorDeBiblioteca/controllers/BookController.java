@@ -6,10 +6,7 @@ import com.gabriel.gerenciadorDeBiblioteca.entities.Book;
 import com.gabriel.gerenciadorDeBiblioteca.mapper.BookMapper;
 import com.gabriel.gerenciadorDeBiblioteca.services.BookService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -24,7 +21,7 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping
+    @PostMapping
     public ResponseEntity<BookResponseDTO> create(@RequestBody BookCreateRequestDTO bookCreateRequestDTO) {
         Book bookToSave = BookMapper.toEntity(bookCreateRequestDTO);
         Book bookCreated = this.bookService.create(bookToSave);
