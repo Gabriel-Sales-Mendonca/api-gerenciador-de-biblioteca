@@ -1,6 +1,5 @@
 package com.gabriel.gerenciadorDeBiblioteca.entities;
 
-import com.gabriel.gerenciadorDeBiblioteca.dto.book.BookCreateRequestDTO;
 import jakarta.persistence.*;
 
 import java.util.Objects;
