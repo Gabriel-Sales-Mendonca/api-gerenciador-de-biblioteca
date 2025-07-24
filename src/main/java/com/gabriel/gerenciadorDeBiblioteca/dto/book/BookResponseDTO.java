@@ -6,8 +6,4 @@ public record BookResponseDTO(
         Long id,
         String title
 ) {
-
-    public BookResponseDTO(Book book) {
-        this(book.getId(), book.getTitle());
-    }
 }

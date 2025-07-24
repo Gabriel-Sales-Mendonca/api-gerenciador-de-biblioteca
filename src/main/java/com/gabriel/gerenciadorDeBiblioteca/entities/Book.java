@@ -25,10 +25,6 @@ public class Book {
         this.title = title;
     }
 
-    public Book(BookCreateRequestDTO bookCreateRequestDTO) {
-        this.title = bookCreateRequestDTO.title();
-    }
-
     public Long getId() {
         return id;
     }
